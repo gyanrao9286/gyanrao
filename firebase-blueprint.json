@@ -1,0 +1,172 @@
+{
+  "entities": {
+    "InboxItem": {
+      "title": "InboxItem",
+      "description": "An incoming message or email monitored in the background with AI reply draft and auto-reply status.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "channel": { "type": "string", "enum": ["EMAIL", "MESSAGE"] },
+        "sender": { "type": "string" },
+        "subject": { "type": "string" },
+        "incomingBody": { "type": "string" },
+        "aiReplyDraft": { "type": "string" },
+        "status": { "type": "string", "enum": ["PENDING", "DRAFT_READY", "AUTO_REPLIED", "ARCHIVED"] },
+        "priority": { "type": "string", "enum": ["HIGH", "NORMAL", "LOW"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "channel", "sender", "subject", "incomingBody",
+        "aiReplyDraft", "status", "priority", "createdAt", "updatedAt"
+      ]
+    },
+    "NewsBriefing": {
+      "title": "NewsBriefing",
+      "description": "Hourly executive briefing covering what is new in India and the World in brief.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "hourLabel": { "type": "string" },
+        "indiaHeadline": { "type": "string" },
+        "indiaSummary": { "type": "string" },
+        "worldHeadline": { "type": "string" },
+        "worldSummary": { "type": "string" },
+        "keyTakeaway": { "type": "string" },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "hourLabel", "indiaHeadline", "indiaSummary",
+        "worldHeadline", "worldSummary", "keyTakeaway", "isRead",
+        "createdAt", "updatedAt"
+      ]
+    },
+    "EnglishTask": {
+      "title": "EnglishTask",
+      "description": "Daily interactive English learning and fluency task with AI coaching feedback.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "dayTopic": { "type": "string" },
+        "category": { "type": "string", "enum": ["VOCABULARY", "SPEAKING", "GRAMMAR", "WRITING"] },
+        "targetPhrase": { "type": "string" },
+        "meaningAndNuance": { "type": "string" },
+        "practicePrompt": { "type": "string" },
+        "userResponse": { "type": "string" },
+        "aiFeedback": { "type": "string" },
+        "masteryScore": { "type": "integer" },
+        "completed": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "dayTopic", "category", "targetPhrase", "meaningAndNuance",
+        "practicePrompt", "userResponse", "aiFeedback", "masteryScore",
+        "completed", "createdAt", "updatedAt"
+      ]
+    },
+    "PhysicsQuizItem": {
+      "title": "PhysicsQuizItem",
+      "description": "CSIR NET Physical Sciences exam question with bilingual Hindi and English options and step-by-step answer explanation.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "topic": { "type": "string" },
+        "partType": { "type": "string", "enum": ["PART_B", "PART_C"] },
+        "questionEn": { "type": "string" },
+        "questionHi": { "type": "string" },
+        "optionsEn": { "type": "array" },
+        "optionsHi": { "type": "array" },
+        "correctIndex": { "type": "integer" },
+        "explanationEn": { "type": "string" },
+        "explanationHi": { "type": "string" },
+        "selectedIndex": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "topic", "partType", "questionEn", "questionHi",
+        "optionsEn", "optionsHi", "correctIndex", "explanationEn",
+        "explanationHi", "selectedIndex", "createdAt", "updatedAt"
+      ]
+    },
+    "DailyThoughtPoster": {
+      "title": "DailyThoughtPoster",
+      "description": "Daily bilingual Hindi and English Thought of the Day / Quote Poster card.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "themeTitle": { "type": "string" },
+        "quoteEnglish": { "type": "string" },
+        "quoteHindi": { "type": "string" },
+        "authorOrSource": { "type": "string" },
+        "reflectionNote": { "type": "string" },
+        "paletteStyle": {
+          "type": "string",
+          "enum": ["SAFFRON_GOLD", "ROYAL_INDIGO", "EMERALD_DAWN", "CRIMSON_LOTUS"]
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "themeTitle", "quoteEnglish", "quoteHindi",
+        "authorOrSource", "reflectionNote", "paletteStyle",
+        "createdAt", "updatedAt"
+      ]
+    },
+    "AssistantSettings": {
+      "title": "AssistantSettings",
+      "description": "Voice-customizable configuration including language preference (English, Hindi, Bilingual).",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "autoReplyMessages": { "type": "boolean" },
+        "autoReplyEmails": { "type": "boolean" },
+        "replyTone": { "type": "string", "enum": ["EXECUTIVE", "FRIENDLY", "CONCISE", "FORMAL"] },
+        "hourlyBriefingEnabled": { "type": "boolean" },
+        "indiaFocusLevel": { "type": "string", "enum": ["HIGH", "BALANCED", "GLOBAL_FIRST"] },
+        "englishDifficulty": { "type": "string", "enum": ["BEGINNER", "INTERMEDIATE", "ADVANCED", "BUSINESS_FLUENT"] },
+        "dailyGoalMinutes": { "type": "integer" },
+        "voiceReadbackEnabled": { "type": "boolean" },
+        "appLanguage": { "type": "string", "enum": ["ENGLISH", "HINDI", "BILINGUAL"] },
+        "lastVoiceCommand": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "autoReplyMessages", "autoReplyEmails", "replyTone",
+        "hourlyBriefingEnabled", "indiaFocusLevel", "englishDifficulty",
+        "dailyGoalMinutes", "voiceReadbackEnabled", "appLanguage",
+        "lastVoiceCommand", "createdAt", "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/inbox/{itemId}": {
+      "schema": { "$ref": "#/entities/InboxItem" },
+      "description": "Per-user inbox items for background messages and emails."
+    },
+    "/users/{userId}/briefings/{briefingId}": {
+      "schema": { "$ref": "#/entities/NewsBriefing" },
+      "description": "Per-user hourly India and World news briefings."
+    },
+    "/users/{userId}/english_tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/EnglishTask" },
+      "description": "Per-user daily English learning and practice tasks."
+    },
+    "/users/{userId}/physics_quizzes/{quizId}": {
+      "schema": { "$ref": "#/entities/PhysicsQuizItem" },
+      "description": "Per-user CSIR NET Physical Sciences quiz questions and bilingual answers."
+    },
+    "/users/{userId}/thought_posters/{posterId}": {
+      "schema": { "$ref": "#/entities/DailyThoughtPoster" },
+      "description": "Per-user daily bilingual Hindi and English quote posters."
+    },
+    "/users/{userId}/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/AssistantSettings" },
+      "description": "Per-user assistant preferences customizable via voice commands."
+    }
+  }
+}

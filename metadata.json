@@ -1,0 +1,6 @@
+{
+  "name": "Aura Flow",
+  "description": "Personal AI executive assistant for automated message & email replies, hourly India & World news briefings, daily English mastery tasks, and voice-commanded settings.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

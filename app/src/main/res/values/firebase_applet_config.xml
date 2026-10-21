@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="firestore_database_id" translatable="false">ai-studio-android-auraflow-916f2b6b-4b93-4fd0-8e4f-3d8ba0ce3388</string>
+    <string name="recaptcha_site_key" translatable="false">6LfcePktAAAAAM0-pKuJRF5u3DsjwtKRaZ3w07lG</string>
+</resources>

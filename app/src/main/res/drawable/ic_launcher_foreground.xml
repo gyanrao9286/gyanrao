@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Bold AI Pulse & Executive Envelope Emblem within 66dp safe zone -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M54,24 L61,43 L80,50 L61,57 L54,76 L47,57 L28,50 L47,43 Z" />
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M72,28 L75,36 L83,39 L75,42 L72,50 L69,42 L61,39 L69,36 Z" />
+    <path
+        android:fillColor="#F8FAFC"
+        android:pathData="M34,66 L74,66 C76.2,66 78,67.8 78,70 L78,80 C78,82.2 76.2,84 74,84 L34,84 C31.8,84 30,82.2 30,80 L30,70 C30,67.8 31.8,66 34,66 Z M36,71 L54,78 L72,71 L72,69 L54,76 L36,69 Z" />
+</vector>

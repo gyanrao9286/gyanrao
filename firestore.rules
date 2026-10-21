@@ -1,0 +1,284 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidInboxItem(data) {
+      return data.keys().hasAll([
+               'userId', 'channel', 'sender', 'subject', 'incomingBody',
+               'aiReplyDraft', 'status', 'priority', 'createdAt', 'updatedAt'
+             ]) &&
+             data.keys().hasOnly([
+               'userId', 'channel', 'sender', 'subject', 'incomingBody',
+               'aiReplyDraft', 'status', 'priority', 'createdAt', 'updatedAt'
+             ]) &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.channel is string && data.channel in ['EMAIL', 'MESSAGE'] &&
+             data.sender is string && data.sender.size() >= 1 && data.sender.size() <= 120 &&
+             data.subject is string && data.subject.size() >= 1 && data.subject.size() <= 200 &&
+             data.incomingBody is string && data.incomingBody.size() >= 1 && data.incomingBody.size() <= 2000 &&
+             data.aiReplyDraft is string && data.aiReplyDraft.size() <= 2000 &&
+             data.status is string && data.status in ['PENDING', 'DRAFT_READY', 'AUTO_REPLIED', 'ARCHIVED'] &&
+             data.priority is string && data.priority in ['HIGH', 'NORMAL', 'LOW'] &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidNewsBriefing(data) {
+      return data.keys().hasAll([
+               'userId', 'hourLabel', 'indiaHeadline', 'indiaSummary',
+               'worldHeadline', 'worldSummary', 'keyTakeaway', 'isRead',
+               'createdAt', 'updatedAt'
+             ]) &&
+             data.keys().hasOnly([
+               'userId', 'hourLabel', 'indiaHeadline', 'indiaSummary',
+               'worldHeadline', 'worldSummary', 'keyTakeaway', 'isRead',
+               'createdAt', 'updatedAt'
+             ]) &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.hourLabel is string && data.hourLabel.size() >= 1 && data.hourLabel.size() <= 60 &&
+             data.indiaHeadline is string && data.indiaHeadline.size() >= 1 && data.indiaHeadline.size() <= 300 &&
+             data.indiaSummary is string && data.indiaSummary.size() >= 1 && data.indiaSummary.size() <= 1500 &&
+             data.worldHeadline is string && data.worldHeadline.size() >= 1 && data.worldHeadline.size() <= 300 &&
+             data.worldSummary is string && data.worldSummary.size() >= 1 && data.worldSummary.size() <= 1500 &&
+             data.keyTakeaway is string && data.keyTakeaway.size() >= 1 && data.keyTakeaway.size() <= 500 &&
+             data.isRead is bool &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidEnglishTask(data) {
+      return data.keys().hasAll([
+               'userId', 'dayTopic', 'category', 'targetPhrase', 'meaningAndNuance',
+               'practicePrompt', 'userResponse', 'aiFeedback', 'masteryScore',
+               'completed', 'createdAt', 'updatedAt'
+             ]) &&
+             data.keys().hasOnly([
+               'userId', 'dayTopic', 'category', 'targetPhrase', 'meaningAndNuance',
+               'practicePrompt', 'userResponse', 'aiFeedback', 'masteryScore',
+               'completed', 'createdAt', 'updatedAt'
+             ]) &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.dayTopic is string && data.dayTopic.size() >= 1 && data.dayTopic.size() <= 150 &&
+             data.category is string && data.category in ['VOCABULARY', 'SPEAKING', 'GRAMMAR', 'WRITING'] &&
+             data.targetPhrase is string && data.targetPhrase.size() >= 1 && data.targetPhrase.size() <= 300 &&
+             data.meaningAndNuance is string && data.meaningAndNuance.size() >= 1 && data.meaningAndNuance.size() <= 1000 &&
+             data.practicePrompt is string && data.practicePrompt.size() >= 1 && data.practicePrompt.size() <= 600 &&
+             data.userResponse is string && data.userResponse.size() <= 1500 &&
+             data.aiFeedback is string && data.aiFeedback.size() <= 1500 &&
+             data.masteryScore is int && data.masteryScore >= 0 && data.masteryScore <= 100 &&
+             data.completed is bool &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidPhysicsQuizItem(data) {
+      return data.keys().hasAll([
+               'userId', 'topic', 'partType', 'questionEn', 'questionHi',
+               'optionsEn', 'optionsHi', 'correctIndex', 'explanationEn',
+               'explanationHi', 'selectedIndex', 'createdAt', 'updatedAt'
+             ]) &&
+             data.keys().hasOnly([
+               'userId', 'topic', 'partType', 'questionEn', 'questionHi',
+               'optionsEn', 'optionsHi', 'correctIndex', 'explanationEn',
+               'explanationHi', 'selectedIndex', 'createdAt', 'updatedAt'
+             ]) &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.topic is string && data.topic.size() >= 1 && data.topic.size() <= 120 &&
+             data.partType is string && data.partType in ['PART_B', 'PART_C'] &&
+             data.questionEn is string && data.questionEn.size() >= 1 && data.questionEn.size() <= 1500 &&
+             data.questionHi is string && data.questionHi.size() >= 1 && data.questionHi.size() <= 1500 &&
+             data.optionsEn is list && data.optionsEn.size() == 4 && data.optionsEn[0] is string &&
+             data.optionsHi is list && data.optionsHi.size() == 4 && data.optionsHi[0] is string &&
+             data.correctIndex is int && data.correctIndex >= 0 && data.correctIndex <= 3 &&
+             data.explanationEn is string && data.explanationEn.size() >= 1 && data.explanationEn.size() <= 2500 &&
+             data.explanationHi is string && data.explanationHi.size() >= 1 && data.explanationHi.size() <= 2500 &&
+             data.selectedIndex is int && data.selectedIndex >= -1 && data.selectedIndex <= 3 &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidDailyThoughtPoster(data) {
+      return data.keys().hasAll([
+               'userId', 'themeTitle', 'quoteEnglish', 'quoteHindi',
+               'authorOrSource', 'reflectionNote', 'paletteStyle',
+               'createdAt', 'updatedAt'
+             ]) &&
+             data.keys().hasOnly([
+               'userId', 'themeTitle', 'quoteEnglish', 'quoteHindi',
+               'authorOrSource', 'reflectionNote', 'paletteStyle',
+               'createdAt', 'updatedAt'
+             ]) &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.themeTitle is string && data.themeTitle.size() >= 1 && data.themeTitle.size() <= 120 &&
+             data.quoteEnglish is string && data.quoteEnglish.size() >= 1 && data.quoteEnglish.size() <= 600 &&
+             data.quoteHindi is string && data.quoteHindi.size() >= 1 && data.quoteHindi.size() <= 600 &&
+             data.authorOrSource is string && data.authorOrSource.size() >= 1 && data.authorOrSource.size() <= 120 &&
+             data.reflectionNote is string && data.reflectionNote.size() >= 1 && data.reflectionNote.size() <= 800 &&
+             data.paletteStyle is string && data.paletteStyle in ['SAFFRON_GOLD', 'ROYAL_INDIGO', 'EMERALD_DAWN', 'CRIMSON_LOTUS'] &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidAssistantSettings(data) {
+      return data.keys().hasAll([
+               'userId', 'autoReplyMessages', 'autoReplyEmails', 'replyTone',
+               'hourlyBriefingEnabled', 'indiaFocusLevel', 'englishDifficulty',
+               'dailyGoalMinutes', 'voiceReadbackEnabled', 'appLanguage',
+               'lastVoiceCommand', 'createdAt', 'updatedAt'
+             ]) &&
+             data.keys().hasOnly([
+               'userId', 'autoReplyMessages', 'autoReplyEmails', 'replyTone',
+               'hourlyBriefingEnabled', 'indiaFocusLevel', 'englishDifficulty',
+               'dailyGoalMinutes', 'voiceReadbackEnabled', 'appLanguage',
+               'lastVoiceCommand', 'createdAt', 'updatedAt'
+             ]) &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.autoReplyMessages is bool &&
+             data.autoReplyEmails is bool &&
+             data.replyTone is string && data.replyTone in ['EXECUTIVE', 'FRIENDLY', 'CONCISE', 'FORMAL'] &&
+             data.hourlyBriefingEnabled is bool &&
+             data.indiaFocusLevel is string && data.indiaFocusLevel in ['HIGH', 'BALANCED', 'GLOBAL_FIRST'] &&
+             data.englishDifficulty is string && data.englishDifficulty in ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'BUSINESS_FLUENT'] &&
+             data.dailyGoalMinutes is int && data.dailyGoalMinutes >= 5 && data.dailyGoalMinutes <= 180 &&
+             data.voiceReadbackEnabled is bool &&
+             data.appLanguage is string && data.appLanguage in ['ENGLISH', 'HINDI', 'BILINGUAL'] &&
+             data.lastVoiceCommand is string && data.lastVoiceCommand.size() <= 300 &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    match /users/{userId}/inbox/{itemId} {
+      allow get: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(itemId);
+      allow list: if isSignedIn() && request.auth.uid == userId && existing().userId == request.auth.uid;
+      allow create: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(itemId) && isValidInboxItem(incoming());
+      allow update: if isSignedIn() &&
+                       isValidInboxItem(incoming()) &&
+                       request.auth.uid == userId &&
+                       isValidId(userId) &&
+                       isValidId(itemId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'channel', 'sender', 'subject', 'incomingBody',
+                         'aiReplyDraft', 'status', 'priority', 'updatedAt'
+                       ]);
+      allow delete: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(itemId) && existing().userId == request.auth.uid;
+    }
+
+    match /users/{userId}/briefings/{briefingId} {
+      allow get: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(briefingId);
+      allow list: if isSignedIn() && request.auth.uid == userId && existing().userId == request.auth.uid;
+      allow create: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(briefingId) && isValidNewsBriefing(incoming());
+      allow update: if isSignedIn() &&
+                       isValidNewsBriefing(incoming()) &&
+                       request.auth.uid == userId &&
+                       isValidId(userId) &&
+                       isValidId(briefingId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'hourLabel', 'indiaHeadline', 'indiaSummary',
+                         'worldHeadline', 'worldSummary', 'keyTakeaway',
+                         'isRead', 'updatedAt'
+                       ]);
+      allow delete: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(briefingId) && existing().userId == request.auth.uid;
+    }
+
+    match /users/{userId}/english_tasks/{taskId} {
+      allow get: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(taskId);
+      allow list: if isSignedIn() && request.auth.uid == userId && existing().userId == request.auth.uid;
+      allow create: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(taskId) && isValidEnglishTask(incoming());
+      allow update: if isSignedIn() &&
+                       isValidEnglishTask(incoming()) &&
+                       request.auth.uid == userId &&
+                       isValidId(userId) &&
+                       isValidId(taskId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'dayTopic', 'category', 'targetPhrase', 'meaningAndNuance',
+                         'practicePrompt', 'userResponse', 'aiFeedback',
+                         'masteryScore', 'completed', 'updatedAt'
+                       ]);
+      allow delete: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(taskId) && existing().userId == request.auth.uid;
+    }
+
+    match /users/{userId}/physics_quizzes/{quizId} {
+      allow get: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(quizId);
+      allow list: if isSignedIn() && request.auth.uid == userId && existing().userId == request.auth.uid;
+      allow create: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(quizId) && isValidPhysicsQuizItem(incoming());
+      allow update: if isSignedIn() &&
+                       isValidPhysicsQuizItem(incoming()) &&
+                       request.auth.uid == userId &&
+                       isValidId(userId) &&
+                       isValidId(quizId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'topic', 'partType', 'questionEn', 'questionHi',
+                         'optionsEn', 'optionsHi', 'correctIndex', 'explanationEn',
+                         'explanationHi', 'selectedIndex', 'updatedAt'
+                       ]);
+      allow delete: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(quizId) && existing().userId == request.auth.uid;
+    }
+
+    match /users/{userId}/thought_posters/{posterId} {
+      allow get: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(posterId);
+      allow list: if isSignedIn() && request.auth.uid == userId && existing().userId == request.auth.uid;
+      allow create: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(posterId) && isValidDailyThoughtPoster(incoming());
+      allow update: if isSignedIn() &&
+                       isValidDailyThoughtPoster(incoming()) &&
+                       request.auth.uid == userId &&
+                       isValidId(userId) &&
+                       isValidId(posterId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'themeTitle', 'quoteEnglish', 'quoteHindi',
+                         'authorOrSource', 'reflectionNote', 'paletteStyle',
+                         'updatedAt'
+                       ]);
+      allow delete: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(posterId) && existing().userId == request.auth.uid;
+    }
+
+    match /users/{userId}/settings/{settingId} {
+      allow get: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(settingId);
+      allow list: if isSignedIn() && request.auth.uid == userId && existing().userId == request.auth.uid;
+      allow create: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(settingId) && isValidAssistantSettings(incoming());
+      allow update: if isSignedIn() &&
+                       isValidAssistantSettings(incoming()) &&
+                       request.auth.uid == userId &&
+                       isValidId(userId) &&
+                       isValidId(settingId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'autoReplyMessages', 'autoReplyEmails', 'replyTone',
+                         'hourlyBriefingEnabled', 'indiaFocusLevel', 'englishDifficulty',
+                         'dailyGoalMinutes', 'voiceReadbackEnabled', 'appLanguage',
+                         'lastVoiceCommand', 'updatedAt'
+                       ]);
+      allow delete: if isSignedIn() && request.auth.uid == userId && isValidId(userId) && isValidId(settingId) && existing().userId == request.auth.uid;
+    }
+  }
+}

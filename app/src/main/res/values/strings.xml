@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Aura Flow</string>
+    <string name="tagline">Executive AI • CSIR Physics Quiz • Hindi &amp; English • Thought Posters</string>
+    <string name="sign_in_google">Sign in with Google</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="nav_dashboard">Home</string>
+    <string name="nav_inbox">Auto-Reply</string>
+    <string name="nav_briefings">News</string>
+    <string name="nav_physics">CSIR Physics</string>
+    <string name="nav_english">English</string>
+    <string name="nav_settings">Settings</string>
+    <string name="voice_command_hint">Speak a command to customize settings…</string>
+    <string name="generate_briefing">Generate Hourly Briefing</string>
+    <string name="generate_english_task">New Daily English Mission</string>
+    <string name="simulate_incoming">Check &amp; Reply Incoming</string>
+</resources>
